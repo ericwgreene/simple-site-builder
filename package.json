@@ -1,0 +1,39 @@
+{
+  "name": "simple-site-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "bin": {
+    "simple-site-builder": "./bin/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.3",
+    "chokidar": "3.2.2",
+    "livereload": "0.8.2",
+    "serve-handler": "6.1.2",
+    "yargs": "14.2.0"
+  },
+  "devDependencies": {
+    "eslint": "6.6.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2020": true
+    },
+    "rules": {
+      "semi": "error",
+      "max-len": [
+        "error",
+        {
+          "code": 80,
+          "tabWidth": 4
+        }
+      ]
+    }
+  }
+}
