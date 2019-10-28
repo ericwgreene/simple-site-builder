@@ -12,7 +12,7 @@ const prepareDestinationFolder = async (destinationFolder) => {
   await fs.promises.mkdir(destinationFolder);
 };
 
-const copyFilesInFolder = async (sourceFolder, destinationFolder) => {
+const copyFilesInFolder = async (sourceFolder, destinationFolder, publish) => {
 
   const directoryEntries = await fs.promises.readdir(
     sourceFolder,
@@ -29,7 +29,12 @@ const copyFilesInFolder = async (sourceFolder, destinationFolder) => {
     const destinationFilePath = path.join(destinationFolder, fileToCopy);
 
     if (fileToCopy.endsWith('.html')) {
-      await htmlTransform(sourceFilePath, destinationFilePath, sourceFolder);
+      await htmlTransform(
+        sourceFilePath,
+        destinationFilePath,
+        sourceFolder,
+        publish,
+      );
     } else {
       await copyTransform(sourceFilePath, destinationFilePath);
     }
@@ -38,7 +43,7 @@ const copyFilesInFolder = async (sourceFolder, destinationFolder) => {
 
 };
 
-const traverseFolderTree = async (sourceFolder, destinationFolder) => {
+const traverseFolderTree = async (sourceFolder, destinationFolder, publish) => {
 
   await prepareDestinationFolder(destinationFolder);
 
@@ -56,24 +61,30 @@ const traverseFolderTree = async (sourceFolder, destinationFolder) => {
     const childSourceFolder = path.join(sourceFolder, folder);
     const childDestinationFolder = path.join(destinationFolder, folder);
 
-    await traverseFolderTree(childSourceFolder, childDestinationFolder);
+    await traverseFolderTree(
+      childSourceFolder,
+      childDestinationFolder,
+      publish,
+    );
 
   }));
-  
+
   await copyFilesInFolder(
     sourceFolder,
     destinationFolder,
+    publish,
   );
 
 };
 
-module.exports.buildSite = async (sourceFolder, destinationFolder) => {
+module.exports.buildSite = async (sourceFolder, destinationFolder, publish) => {
 
   try {
 
     await traverseFolderTree(
       sourceFolder,
       destinationFolder,
+      publish,
     );
 
     console.log('All done');

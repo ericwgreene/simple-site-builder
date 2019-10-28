@@ -6,6 +6,7 @@ module.exports.htmlTransform = async (
   sourceFilePath,
   destinationFilePath,
   sourceFolder,
+  publish
 ) => {
 
   const html = await fs.promises.readFile(sourceFilePath, 'utf-8');
@@ -22,18 +23,19 @@ module.exports.htmlTransform = async (
     node.removeAttr('data-partial');
   }).get());
 
-  template('body').append(
-    `<!-- Live Reload -->\n` +
-    `<script>\n` +
-    `  document.write(\n` +
-    `    '<script src="http://' + \n` +
-    `    (location.host || 'localhost').split(':')[0] + \n` +
-    `    ':35729/livereload.js?snipver=1"></' + \n` +
-    `    'script>')\n` +
-    `</script>\n` + 
-    `<!-- End Live Reload -->\n`
-  );
+  if (!publish) {
+    template('body').append(
+      `<!-- Live Reload -->\n` +
+      `<script>\n` +
+      `  document.write(\n` +
+      `    '<script src="http://' + \n` +
+      `    (location.host || 'localhost').split(':')[0] + \n` +
+      `    ':35729/livereload.js?snipver=1"></' + \n` +
+      `    'script>')\n` +
+      `</script>\n` + 
+      `<!-- End Live Reload -->\n`
+    );
+  }
 
   await fs.promises.writeFile(destinationFilePath, template.html(), 'utf-8');
-
 };
